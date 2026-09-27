@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole{
+  CUSTOMER
+  VENDOR
+  SUPER_ADMIN
+}
+enum UserStatus{
+  ACTIVE
+  INACTIVE
+}
+enum VendorApproval {
+  PENDING
+  APPROVED
+  REJECTED
+}
+enum StoreStatus{
+  ACTIVE
+  INACTIVE
+}
+enum StockStatus {
+  IN_STOCK
+  LOW_STOCK
+  OUT_OF_STOCK
+}
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+}
+enum OrderVendorStatus{
+  PENDING
+  APPROVED
+  REJECTED
+}
+enum NotificationType{
+  VENDOR_REGISTRATION
+  VENDOR_APPROVED
+  VENDOR_REJECTED
+  VENDOR_ACTIVATED
+  VENDOR_DEACTIVATED
+  NEW_ORDER
+}
+model User{
+  id        Int @id @default(autoincrement())
+  name      String
+  email     String @unique
+  password  String
+  role      UserRole
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  vendor  Vendor?
+  orders  Order[]
+  notifications  Notification[]
+   passwordResetTokens PasswordResetToken[]
+
+}
+model Vendor{
+  id             Int            @id @default(autoincrement())
+  userId         Int            @unique
+  businessName   String
+  phone          String
+  categoryId     Int
+  approvalStatus VendorApproval @default(PENDING)
+  storeStatus    StoreStatus    @default(INACTIVE)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user    User    @relation(fields:[userId], references:[id])
+  category  Category  @relation(fields:[categoryId], references:[id])
+  products  Product[]
+  orderVendors  OrderVendor[]
+}
+model Category{
+   id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  image String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  vendors Vendor[]
+  products Product[]
+}
+model Product{
+   id            Int      @id @default(autoincrement())
+  vendorId      Int
+  categoryId    Int
+  name          String
+  sku           String 
+  description   String  @db.Text
+  price         Int
+  stockQuantity Int      @default(0)
+  minimumStock  Int      @default(0)
+   stockStatus   StockStatus @default(OUT_OF_STOCK)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+
+   @@unique([vendorId, sku]) 
+  images ProductImage[]
+  vendor   Vendor   @relation(fields:[vendorId], references:[id])
+  category  Category   @relation(fields:[categoryId], references:[id])
+  orderItems  OrderItem[]
+}
+model ProductImage {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  imagePath String
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+model Order{
+   id           Int      @id @default(autoincrement())
+  orderNumber  String   @unique
+  customerId   Int
+
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  city            String
+  shippingAddress String
+
+  totalAmount  Int
+  status       OrderStatus
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  customer     User         @relation(fields: [customerId], references: [id])
+  orderVendors OrderVendor[]
+  orderItems   OrderItem[]
+}
+model OrderVendor{
+  id        Int               @id @default(autoincrement())
+  orderId   Int
+  vendorId  Int
+  status    OrderVendorStatus
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  order      Order       @relation(fields: [orderId], references: [id])
+  vendor     Vendor      @relation(fields: [vendorId], references: [id])
+  orderItems OrderItem[]
+
+  @@unique([orderId, vendorId])
+}
+model OrderItem{
+  id            Int      @id @default(autoincrement())
+  orderId       Int
+  orderVendorId Int
+  productId     Int
+  quantity      Int
+  unitPrice     Int
+  subtotal      Int
+  createdAt     DateTime @default(now())
+
+  order       Order       @relation(fields: [orderId], references: [id])
+  orderVendor OrderVendor @relation(fields: [orderVendorId], references: [id])
+  product     Product     @relation(fields: [productId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  message   String
+  type      NotificationType
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+model PasswordResetToken{
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+
