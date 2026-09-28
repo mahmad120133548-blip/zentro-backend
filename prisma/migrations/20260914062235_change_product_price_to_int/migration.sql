@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE `product` MODIFY `price` INTEGER NOT NULL;
+ALTER TABLE `Product` MODIFY `price` INTEGER NOT NULL;
