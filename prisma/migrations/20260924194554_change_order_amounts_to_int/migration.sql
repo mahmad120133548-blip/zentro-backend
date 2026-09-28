@@ -7,8 +7,8 @@
 
 */
 -- AlterTable
-ALTER TABLE `order` MODIFY `totalAmount` INTEGER NOT NULL;
+ALTER TABLE `Order` MODIFY `totalAmount` INTEGER NOT NULL;
 
 -- AlterTable
-ALTER TABLE `orderitem` MODIFY `unitPrice` INTEGER NOT NULL,
+ALTER TABLE `OrderItem` MODIFY `unitPrice` INTEGER NOT NULL,
     MODIFY `subtotal` INTEGER NOT NULL;
