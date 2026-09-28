@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "dev": "nodemon app.js",
-  "start": "node app.js"
-},
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -24,6 +24,7 @@
     "nodemailer": "^10.0.0",
     "nodemon": "^3.1.14",
     "prisma": "^6.19.3",
+    "resend": "^6.30.0",
     "sharp": "^0.35.4"
   }
 }

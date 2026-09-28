@@ -1,8 +1,10 @@
-import transporter from "../config/mail.js";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async ({ to, subject, html }) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
+  await resend.emails.send({
+    from: "Zentro <onboarding@resend.dev>",
     to,
     subject,
     html,
