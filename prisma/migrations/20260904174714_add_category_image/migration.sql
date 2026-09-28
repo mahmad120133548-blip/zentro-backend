@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE `category` ADD COLUMN `image` VARCHAR(191) NULL;
+ALTER TABLE `Category` ADD COLUMN `image` VARCHAR(191) NULL;
