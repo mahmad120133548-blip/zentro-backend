@@ -1,4 +1,5 @@
 import prisma from "../config/prisma.js";
+
 export const getVendorDashboardStats = async (req, res) => {
   try {
     const vendorId = req.user.vendorId;
@@ -42,14 +43,13 @@ export const getVendorDashboardStats = async (req, res) => {
       pendingOrders,
       totalSales,
     });
-  } 
-catch (error) {
-  console.error(error);
+  } catch (error) {
+    console.error(error);
 
-  return res.status(500).json({
-    message: "Something went wrong",
-  });
-}
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
 };
 
 export const getVendorNotifications = async (req, res) => {
@@ -57,25 +57,16 @@ export const getVendorNotifications = async (req, res) => {
     const notifications = await prisma.notification.findMany({
       where: {
         userId: req.user.id,
+        isRead: false,
       },
-      orderBy: [
-        {
-          isRead: "asc",
-        },
-        {
-          createdAt: "desc",
-        },
-      ],
-      take: 10,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
-
-    const unreadCount = notifications.filter(
-      (notification) => !notification.isRead
-    ).length;
 
     return res.status(200).json({
       notifications,
-      unreadCount,
+      unreadCount: notifications.length,
     });
   } catch (error) {
     return res.status(500).json({
@@ -83,7 +74,6 @@ export const getVendorNotifications = async (req, res) => {
     });
   }
 };
-
 
 export const markVendorNotificationAsRead = async (req, res) => {
   try {
@@ -252,3 +242,5 @@ export const updateVendorStoreInformation = async (req, res) => {
     });
   }
 };
+
+
