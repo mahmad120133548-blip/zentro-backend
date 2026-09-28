@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE `order` ADD COLUMN `city` VARCHAR(191) NOT NULL;
+ALTER TABLE `Order` ADD COLUMN `city` VARCHAR(191) NOT NULL;
