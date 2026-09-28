@@ -6,7 +6,7 @@
 
 */
 -- AlterTable
-ALTER TABLE `product` DROP COLUMN `image`;
+ALTER TABLE `Product` DROP COLUMN `image`;
 
 -- CreateTable
 CREATE TABLE `ProductImage` (
