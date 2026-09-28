@@ -143,12 +143,13 @@ for (let index = 0; index < files.length; index++) {
       message: "Product created successfully",
       product,
     });
-  } 
+  
 } catch (error) {
   return res.status(500).json({
     message: "Failed to create product",
   });
 }
+};
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -552,16 +553,17 @@ for (let index = 0; index < files.length; index++) {
     });
 
 
-    return res.status(200).json({
+        return res.status(200).json({
       message: "Product updated successfully",
       product,
     });
-  } 
-} catch (error) {
-  return res.status(500).json({
-    message: "Failed to update product",
-  });
-}
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to update product",
+    });
+  }
+};
+
 
 export const restockProduct = async (req, res) => {
   try {
