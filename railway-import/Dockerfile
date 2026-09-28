@@ -1,0 +1,5 @@
+FROM mysql:8.4
+
+COPY zentro-data-only.sql /zentro-data-only.sql
+
+CMD ["sh", "-c", "sed -i 's/INSERT INTO `category`/INSERT INTO `Category`/g; s/INSERT INTO `user`/INSERT INTO `User`/g; s/INSERT INTO `vendor`/INSERT INTO `Vendor`/g; s/INSERT INTO `product`/INSERT INTO `Product`/g; s/INSERT INTO `productimage`/INSERT INTO `ProductImage`/g; s/INSERT INTO `order`/INSERT INTO `Order`/g; s/INSERT INTO `orderitem`/INSERT INTO `OrderItem`/g; s/INSERT INTO `ordervendor`/INSERT INTO `OrderVendor`/g; s/INSERT INTO `notification`/INSERT INTO `Notification`/g; s/INSERT INTO `passwordresettoken`/INSERT INTO `PasswordResetToken`/g' /zentro-data-only.sql && mysql --binary-mode=1 -h \"$MYSQLHOST\" -P \"$MYSQLPORT\" -u \"$MYSQLUSER\" -p\"$MYSQLPASSWORD\" \"$MYSQLDATABASE\" < /zentro-data-only.sql && sleep infinity"]
